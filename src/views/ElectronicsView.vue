@@ -1,51 +1,26 @@
 <script setup>
-import ProductCard from "../components/ProductCard.vue";
-import { ref, onBeforeMount } from "vue";
-import { useProductStore } from "../stores/product.js";
 import { storeToRefs } from "pinia";
+import { useProductStore } from "../stores/product";
+import ProductCard from "../components/ProductCard.vue";
+import { onMounted } from "vue";
 
+const { isLoading, electronics } = storeToRefs(useProductStore());
 const { getProducts } = useProductStore();
-const { men, women, isLoading } = storeToRefs(useProductStore());
 
-onBeforeMount(() => {
+onMounted(() => {
   getProducts();
 });
-
-const section = ref("men");
-
-const toggleWomen = () => {
-  section.value = "women";
-};
-const toggleMen = () => {
-  section.value = "men";
-};
 </script>
 
 <template>
-  <div class="p-16 w-full bg-[#F3F2EC] space-y-8">
+  <div class="p-16 w-full bg-white bg-[#F3F2EC] space-y-8">
     <div class="flex space-x-4">
       <router-link to="/home">Home</router-link>
       <p>>></p>
-      <p>Clothing</p>
+      <p>Electronics</p>
     </div>
-    <div class="flex space-x-64 px-16 py-4 shadow-md bg-white">
-      <p class="font-bold text-4xl">Clothing</p>
-      <div class="flex space-x-16 justify-center">
-        <p
-          class="text-lg font-semibold px-3 py-2 rounded-lg cursor-pointer"
-          :class="section === 'men' ? 'bg-[#0CB5BE] text-white' : 'gb-white'"
-          @click="toggleMen"
-        >
-          Men's Clothing
-        </p>
-        <p
-          class="text-lg font-semibold px-3 py-2 rounded-lg cursor-pointer"
-          :class="section === 'women' ? 'bg-[#0CB5BE] text-white' : 'gb-white'"
-          @click="toggleWomen"
-        >
-          Women's Clothing
-        </p>
-      </div>
+    <div class="text-center px-16 py-4 shadow-md bg-white">
+      <p class="font-bold text-4xl">Electronics</p>
     </div>
     <div
       v-if="isLoading"
@@ -63,7 +38,7 @@ const toggleMen = () => {
       <div v-for="index in 4" :key="index"><span class="loader"></span></div>
     </div>
     <div
-      v-else-if="section === 'men'"
+      v-else
       class="
         grid
         xl:grid-cols-4
@@ -75,39 +50,18 @@ const toggleMen = () => {
         xl:px-16
       "
     >
-      <router-link
-        :to="{ name: 'clothing-details', params: { id: prod.id } }"
-        v-for="prod in men"
+    <router-link
+        :to="{ name: 'electronics-details', params: { id: prod.id } }"
+        v-for="prod in electronics"
         :key="prod.id"
         class="cursor-pointer"
         ><ProductCard
-          :category="prod.category"
-          :title="prod.title"
-          :image="prod.image"
-          :price="prod.price"
-      /></router-link>
-    </div>
-    <div
-      v-else-if="section === 'women'"
-      class="
-        grid
-        xl:grid-cols-4
-        lg:grid-cols-3
-        md:grid-cols-2
-        grid-cols-1
-        lg:gap-16
-        gap-8
-        xl:px-16
-      "
-    >
-      <ProductCard
-        v-for="prod in women"
-        :key="prod.id"
         :category="prod.category"
         :title="prod.title"
         :image="prod.image"
         :price="prod.price"
       />
+      </router-link>
     </div>
   </div>
 </template>
