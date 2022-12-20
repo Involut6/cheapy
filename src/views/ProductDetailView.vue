@@ -1,15 +1,32 @@
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/product";
 import { useRouter } from "vue-router";
-import Star from "../components/icons/Star.vue";
+import Modal from "../components/Modal.vue";
+import { useModal } from "../useModal.ts";
+
+const { modalIsOpen, openModal, closeModal } = useModal();
+
+const formIsOpen = ref(false); 
+
+const open = () => {
+  document.body.classList.add("overflow-hidden");
+  formIsOpen.value = true;
+  openModal();
+};
+
+const close = async () => {
+  document.body.classList.remove("overflow-hidden");
+  formIsOpen.value = false;
+  closeModal();
+};
 
 const router = useRouter();
 const back = () => {
   router.go(-1);
 };
-const { isLoading, prodId, product } = storeToRefs(useProductStore());
+const { isLoading, prodId, product, cart, error } = storeToRefs(useProductStore());
 const { getProduct } = useProductStore();
 
 const props = defineProps({
@@ -18,12 +35,34 @@ const props = defineProps({
 
 onMounted(() => {
   prodId.value = props.id;
-  getProduct();
+  getProduct()
 });
+
+const modalText = ref('')
+
+const addToCart = () => {
+  if (cart.value.includes(product.value)) {
+    open()
+    modalText.value = 'Product already exists inside the cart'
+  } else if (error.value) {
+    modalText.value = 'Sorry, an error occurs from our side while adding your product to the cart, we are currently working on it, Kindly try again.'
+  }
+  else {
+    cart.value.push(product.value)
+    open()
+    modalText.value = 'Product added to cart'
+  }
+
+}
+
 </script>
 
 <template>
   <div class="md:p-16 p-8 w-full xl:px-48 bg-white bg-[#F3F2EC] space-y-8">
+    <Modal v-if="formIsOpen && modalIsOpen" @closeModal="close">
+      <p>{{ modalText }}</p>
+      <button class="bg-[#F06042] text-white px-2 py-1 decoration-none rounded" @click="close">Ok</button>
+    </Modal>
     <div class="flex space-x-4">
       <p @click="back">Back</p>
     </div>
@@ -77,8 +116,9 @@ onMounted(() => {
               font-semibold
               text-white
             "
+            @click="addToCart"
           >
-            Add to Cart
+          Add to cart
           </button>
         </div>
       </div>

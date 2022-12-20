@@ -22,24 +22,22 @@ const toggleMen = () => {
 </script>
 
 <template>
-  <div class="p-16 w-full bg-[#F3F2EC] space-y-8">
+  <div class="md:p-16 p-6 w-full bg-[#F3F2EC] space-y-8">
     <div class="flex space-x-4">
-      <router-link to="/home">Home</router-link>
-      <p>>></p>
-      <p>Clothing</p>
+      <p @click="back">Back</p>
     </div>
-    <div class="flex space-x-64 px-16 py-4 shadow-md bg-white">
-      <p class="font-bold text-4xl">Clothing</p>
-      <div class="flex space-x-16 justify-center">
+    <div class="md:flex xl:space-x-64 md:space-y-0 space-y-4 lg:px-16 md:px-8 px-4 items-center xl:justify-start justify-between py-4 shadow-md bg-white">
+      <p class="font-bold text-2xl text-center lg:text-4xl">Clothing</p>
+      <div class="flex xl:space-x-16 md:space-x-6 justify-center">
         <p
-          class="text-lg font-semibold px-3 py-2 rounded-lg cursor-pointer"
+          class="lg:text-lg font-semibold lg:px-3 px-2 py-2 rounded-lg cursor-pointer"
           :class="section === 'men' ? 'bg-[#0CB5BE] text-white' : 'gb-white'"
           @click="toggleMen"
         >
           Men's Clothing
         </p>
         <p
-          class="text-lg font-semibold px-3 py-2 rounded-lg cursor-pointer"
+          class="lg:text-lg font-semibold px-3 py-2 rounded-lg cursor-pointer"
           :class="section === 'women' ? 'bg-[#0CB5BE] text-white' : 'gb-white'"
           @click="toggleWomen"
         >
@@ -100,14 +98,17 @@ const toggleMen = () => {
         xl:px-16
       "
     >
-      <ProductCard
+    <router-link
+        :to="{ name: 'clothing-details', params: { id: prod.id } }"
         v-for="prod in women"
         :key="prod.id"
-        :category="prod.category"
-        :title="prod.title"
-        :image="prod.image"
-        :price="prod.price"
-      />
+        class="cursor-pointer"
+        ><ProductCard
+          :category="prod.category"
+          :title="prod.title"
+          :image="prod.image"
+          :price="prod.price"
+      /></router-link>
     </div>
   </div>
 </template>

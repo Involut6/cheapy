@@ -2,6 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/product";
 import ProductCard from "../components/ProductCard.vue";
+import { useRouter } from "vue-router";
 import { onMounted } from "vue";
 
 const { isLoading, electronics } = storeToRefs(useProductStore());
@@ -10,17 +11,20 @@ const { getProducts } = useProductStore();
 onMounted(() => {
   getProducts();
 });
+
+const router = useRouter();
+const back = () => {
+  router.go(-1);
+};
 </script>
 
 <template>
-  <div class="p-16 w-full bg-white bg-[#F3F2EC] space-y-8">
+  <div class="md:p-16 p-6 w-full bg-[#F3F2EC] space-y-8">
     <div class="flex space-x-4">
-      <router-link to="/home">Home</router-link>
-      <p>>></p>
-      <p>Electronics</p>
+      <p @click="back">Back</p>
     </div>
     <div class="text-center px-16 py-4 shadow-md bg-white">
-      <p class="font-bold text-4xl">Electronics</p>
+      <p class="font-bold text-2xl text-center lg:text-4xl">Electronics</p>
     </div>
     <div
       v-if="isLoading"
