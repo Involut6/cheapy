@@ -1,16 +1,17 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useProductStore } from "../stores/product";
+import { useRouter, useRoute } from "vue-router";
 import ProductCard from "../components/ProductCard.vue";
-import { onMounted } from "vue";
 
-const { isLoading, accessory } = storeToRefs(useProductStore());
-const { getProducts } = useProductStore();
+const router = useRouter();
+const route = useRoute();
+const back = () => {
+  router.go(-1);
+  console.log('Yes')
+};
 
-onMounted(() => {
-  getProducts();
-});
-
+const { cart } = storeToRefs(useProductStore());
 </script>
 
 <template>
@@ -19,10 +20,12 @@ onMounted(() => {
       <p @click="back">Back</p>
     </div>
     <div class="text-center px-16 py-4 shadow-md bg-white">
-      <p class="font-bold text-2xl text-center lg:text-4xl">Accessories</p>
+      <p class="font-bold text-2xl text-center lg:text-4xl">Cart</p>
+    </div>
+    <div v-if="cart.length === 0" class="flex pt-24 justify-center text-[#F06042] w-full text-xl lg:text-4xl h-[60vh] lg:h-[70vh] font-bold">
+      <p>Cart is currently empty</p>
     </div>
     <div
-      v-if="isLoading"
       class="
         grid
         xl:grid-cols-4
@@ -34,33 +37,12 @@ onMounted(() => {
         xl:px-16
       "
     >
-      <div v-for="index in 4" :key="index"><span class="loader"></span></div>
-    </div>
-    <div
-      v-else
-      class="
-        grid
-        xl:grid-cols-4
-        lg:grid-cols-3
-        md:grid-cols-2
-        grid-cols-1
-        lg:gap-16
-        gap-8
-        xl:px-16
-      "
-    >
-    <router-link
-        :to="{ name: 'accessories-details', params: { id: prod.id } }"
-        v-for="prod in accessory"
-        :key="prod.id"
-        class="cursor-pointer"
-        ><ProductCard
+    <ProductCard v-for="prod in cart" :key="prod.id" :id="prod.id"
         :category="prod.category"
         :title="prod.title"
         :image="prod.image"
         :price="prod.price"
       />
-    </router-link>
     </div>
   </div>
 </template>

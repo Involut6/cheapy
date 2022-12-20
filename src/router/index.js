@@ -5,6 +5,7 @@ import ClothingView from '../views/ClothingView.vue';
 import ElectronicsView from '../views/ElectronicsView.vue';
 import AccessoriesView from '../views/AccessoriesView.vue';
 import ProductDetailView from '../views/ProductDetailView.vue';
+import CartView from '../views/CartView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,7 +53,11 @@ const router = createRouter({
           component: ProductDetailView,
           props: true
         },
-
+        {
+          path: '/cart',
+          name: 'cart',
+          component: CartView,
+        }
       ]
     },
   ],
