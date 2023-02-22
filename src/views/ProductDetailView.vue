@@ -67,7 +67,7 @@ const addToCart = () => {
       <p @click="back">Back</p>
     </div>
     <div class="text-center lg:px-16 lg:py-4 px-6 py-2 shadow-md bg-white">
-      <p class="font-bold md:text-2xl">{{ product.title }}</p>
+      <p class="font-bold md:text-[28px]">{{ product.title }}</p>
     </div>
     <div v-if="isLoading" class="space-y-4 px-2">
             <span class="loader"></span>
